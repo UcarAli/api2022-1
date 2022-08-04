@@ -1,8 +1,10 @@
+package base_urls;
+
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Before;
 
-public class BaseUrls {
+public class JsonPlaceHolderBaseUrls {
 
     protected RequestSpecification spec;
     //If you use @Before annotation at the top of a method, it will be executed before every test method.
@@ -12,6 +14,4 @@ public class BaseUrls {
         spec = new RequestSpecBuilder().setBaseUri("https://jsonplaceholder.typicode.com").build();
 
     }
-
-
 }
