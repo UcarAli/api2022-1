@@ -1,6 +1,6 @@
 package get_requests;
 
-import base_urls.JsonPlaceHolderBaseUrls;
+import base_urls.JsonPlaceHolderBaseUrl;
 import io.restassured.response.Response;
 import org.junit.Test;
 import test_data.JsonPlaceHolderTestData;
@@ -9,10 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.*;
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
-public class Get08 extends JsonPlaceHolderBaseUrls {
+public class Get08 extends JsonPlaceHolderBaseUrl {
     /*
     Serialization: To convert Java Object to Json Data
     De-Serialization: To convert Json Data to Java Object
