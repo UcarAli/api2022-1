@@ -41,6 +41,7 @@ public class Post03Pojo extends JsonPlaceHolderBaseUrl {
         JsonPlaceHolderPojo payload = new JsonPlaceHolderPojo(55,"Tidy your room",false);
         System.out.println("ExpectedData: "+payload);
 
+
         //3. Step: Send Post Request and get the Response
         Response response = given().spec(spec).contentType(ContentType.JSON).body(payload).when().post("/{first}");
         response.prettyPrint();
