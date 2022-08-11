@@ -58,7 +58,7 @@ public class JsonPlaceHolderPojo {
 
     @Override
     public String toString() {
-        return "JsonPlaceHolderPojo{" +
+        return "JsonPlaceHolderPojo: {" +
                 "userId=" + userId +
                 ", title='" + title + '\'' +
                 ", completed=" + completed +
