@@ -1,15 +1,20 @@
 package get_requests;
 
 import base_urls.DummyRestApiBaseUrl;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.Test;
 
+import java.util.Collections;
+import java.util.List;
+
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
 
 public class Get16 extends DummyRestApiBaseUrl {
-      /*
+
+     /*
            URL: https://dummy.restapiexample.com/api/v1/employees
            HTTP Request Method: GET Request
            Test Case: Type by using Gherkin Language
@@ -25,7 +30,7 @@ public class Get16 extends DummyRestApiBaseUrl {
     Given
         https://dummy.restapiexample.com/api/v1/employees
     When
-        User sends GET Request to the Url
+        User sends Get Request to the Url
     Then
         Status code is 200
     And
@@ -35,29 +40,55 @@ public class Get16 extends DummyRestApiBaseUrl {
     And
         The greatest age is 66
     And
-        The name of the lowest age is "Tatyana Fitzpatrick"
+        The name of the lowest age is "[Tatyana Fitzpatrick]"
     And
         Total salary of all employees is 6,644,770
      */
+
     @Test
     public void get01(){
         //1. Step: Set the Url
         spec.pathParam("first","employees");
 
-        //2. Step: Set the expected data
+        //2. Set the expected Data
 
-        //3. Step: Send the Get Request and get the Response
+        //3. Step: Send the request and get the Response
         Response response = given().spec(spec).when().get("/{first}");
         response.prettyPrint();
 
         //4. Step: Do Assertion
         response.then().assertThat().statusCode(200).body("data.id",hasSize(24),
-                "data.employee_name", hasItems("Tiger Nixon","Garrett Winters"));
+                "data.employee_name",hasItems("Tiger Nixon","Garrett Winters"));
 
+        JsonPath json = response.jsonPath();
+        List<Integer> ageList =  json.getList("data.findAll{it.id}.employee_age");
+        System.out.println(ageList);
+        Collections.sort(ageList);
+        System.out.println("Greatest age is "+ageList.get(ageList.size()-1));
+        assertEquals(66, (int)ageList.get(ageList.size()-1));
+        String nameOfLowestAge = json.getString("data.findAll{it.employee_age=="+ageList.get(0)+"}.employee_name");
+        System.out.println(nameOfLowestAge);
+        assertEquals("[Tatyana Fitzpatrick]",nameOfLowestAge);
 
+        List<Integer> salaryList = json.getList("data.findAll{it.id}.employee_salary");
+        System.out.println(salaryList);
+        //1. Way:
+        int sum=0;
+        for(int w:salaryList){
+            sum += w;
+        }
+        System.out.println(sum);
+
+        //2. Way:
+
+        int sum2 =salaryList.stream().reduce(0,(t,u)->(t+u));
+        System.out.println(sum2);
+
+        //3. Way:
+        int sum3 =salaryList.stream().reduce(0, Math::addExact);
+        System.out.println(sum3);
+
+        assertEquals(6644770,sum3);
 
     }
-
-
-
 }
