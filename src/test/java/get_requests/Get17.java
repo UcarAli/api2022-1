@@ -1,9 +1,14 @@
 package get_requests;
 
 import base_urls.DummyRestApiBaseUrl;
+import io.restassured.response.Response;
 import org.junit.Test;
-import pojos.DataPojo;
-import pojos.DummyRestApiPojo;
+import pojos.DummyApiDataPojo;
+import pojos.DummyApiResponseBodyPojo;
+import utils.JsonUtil;
+
+import static io.restassured.RestAssured.given;
+import static org.junit.Assert.assertEquals;
 
 
 public class Get17 extends DummyRestApiBaseUrl {
@@ -45,10 +50,24 @@ public class Get17 extends DummyRestApiBaseUrl {
         spec.pathParams("first","employee","second",1);
 
         //2. Step: Set the expected data
-        DataPojo dataPojo = new DataPojo();
-        DummyRestApiPojo expectedData = new DummyRestApiPojo();
-        //HomeWork!!!
+        DummyApiDataPojo dataPojo = new DummyApiDataPojo("Tiger Nixon", 320800, 61,"");
+        DummyApiResponseBodyPojo expectedData = new DummyApiResponseBodyPojo("success",dataPojo,"Successfully! Record has been fetched.");
+        System.out.println("expectedData = " + expectedData);
 
+        //3. Step: Send the request and get the Response
+        Response response = given().spec(spec).when().get("/{first}/{second}");
+        response.prettyPrint();
+
+        DummyApiResponseBodyPojo actualData = JsonUtil.convertJsonToJavaObject(response.asString(), DummyApiResponseBodyPojo.class);
+        System.out.println(actualData);
+
+        assertEquals(expectedData.getStatus(),actualData.getStatus());
+        assertEquals(expectedData.getMessage(),actualData.getMessage());
+
+        assertEquals(expectedData.getData().getEmployee_name(), actualData.getData().getEmployee_name());
+        assertEquals(expectedData.getData().getEmployee_salary(), actualData.getData().getEmployee_salary());
+        assertEquals(expectedData.getData().getEmployee_age(), actualData.getData().getEmployee_age());
+        assertEquals(expectedData.getData().getProfile_image(), actualData.getData().getProfile_image());
 
     }
 
